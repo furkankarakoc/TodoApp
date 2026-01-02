@@ -22,4 +22,3 @@ struct Todo: Identifiable, Codable {
         self.createdAt = createdAt
     }
 }
-

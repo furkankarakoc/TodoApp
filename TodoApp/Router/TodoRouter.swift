@@ -25,4 +25,3 @@ class TodoRouter: TodoRouterProtocol {
         // This will be handled in the View layer
     }
 }
-

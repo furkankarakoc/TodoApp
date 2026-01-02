@@ -85,4 +85,3 @@ class TodoPresenter: ObservableObject, TodoPresenterProtocol, TodoInteractorOutp
         print("Error: \(error.localizedDescription)")
     }
 }
-
