@@ -1,0 +1,78 @@
+/* Todo App Localization - German */
+
+// Navigation & Titles
+"app.title" = "Aufgabenliste";
+"todo.new" = "Neue Aufgabe";
+"todo.edit" = "Aufgabe Bearbeiten";
+"filters.title" = "Filter";
+
+// Buttons
+"button.cancel" = "Abbrechen";
+"button.save" = "Speichern";
+"button.delete" = "Löschen";
+"button.edit" = "Bearbeiten";
+"button.done" = "Fertig";
+
+// Todo Fields
+"todo.title" = "Titel";
+"todo.description" = "Beschreibung";
+"todo.description.optional" = "Beschreibung (Optional)";
+"todo.completed" = "Abgeschlossen";
+"todo.category" = "Kategorie";
+"todo.priority" = "Priorität";
+"todo.dueDate" = "Fälligkeitsdatum";
+"todo.dueDate.add" = "Fälligkeitsdatum Hinzufügen";
+
+// Categories
+"category.work" = "Arbeit";
+"category.personal" = "Persönlich";
+"category.shopping" = "Einkaufen";
+"category.health" = "Gesundheit";
+"category.education" = "Bildung";
+"category.other" = "Sonstiges";
+
+// Priorities
+"priority.high" = "Hoch";
+"priority.medium" = "Mittel";
+"priority.low" = "Niedrig";
+
+// Sort Options
+"sort.priority" = "Priorität";
+"sort.dueDate" = "Datum";
+"sort.createdAt" = "Erstellt";
+"sort.title" = "Titel";
+
+// Filters
+"filter.category" = "Kategoriefilter";
+"filter.priority" = "Prioritätsfilter";
+"filter.showCompleted" = "Abgeschlossene Anzeigen";
+"filter.all" = "Alle";
+
+// Empty State
+"empty.title" = "Noch keine Aufgaben";
+"empty.message" = "Tippen Sie auf die + Schaltfläche, um eine neue Aufgabe hinzuzufügen";
+
+// Todo Status
+"status.overdue" = "Überfällig";
+"status.dueSoon" = "Bald Fällig";
+
+// Search
+"search.placeholder" = "Aufgaben suchen...";
+
+// Sections
+"section.todoInfo" = "Aufgabeninformationen";
+"section.category" = "Kategorie";
+"section.priority" = "Priorität";
+"section.date" = "Datum";
+"section.view" = "Ansicht";
+"section.sort" = "Sortieren";
+
+// Settings
+"settings.title" = "Einstellungen";
+"settings.language" = "Sprache";
+"settings.appearance" = "Erscheinungsbild";
+"settings.theme" = "Design";
+"settings.theme.system" = "System";
+"settings.theme.light" = "Hell";
+"settings.theme.dark" = "Dunkel";
+

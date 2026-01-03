@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import Combine
 
 struct TodoListView: View, TodoViewProtocol {
     @StateObject private var presenter: TodoPresenter
+    @EnvironmentObject var languageManager: AppLanguageManager
     @State private var showingAddTodo = false
     @State private var selectedTodo: Todo?
     @State private var selectedCategory: TodoCategory? = nil
@@ -17,6 +19,7 @@ struct TodoListView: View, TodoViewProtocol {
     @State private var searchText: String = ""
     @State private var sortOption: TodoSortOption = .priority
     @State private var showingFilters: Bool = false
+    @State private var showingSettings: Bool = false
     
     init() {
         let presenter = TodoPresenter()
@@ -31,6 +34,7 @@ struct TodoListView: View, TodoViewProtocol {
         _presenter = StateObject(wrappedValue: presenter)
     }
     
+    // Performance: Computed property (caching handled in Interactor)
     var filteredAndSortedTodos: [Todo] {
         presenter.getFilteredAndSortedTodos(
             category: selectedCategory,
@@ -54,11 +58,20 @@ struct TodoListView: View, TodoViewProtocol {
             .searchable(text: $searchText, prompt: "search.placeholder".localized)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        showingFilters.toggle()
-                    }) {
-                        Image(systemName: "line.3.horizontal.decrease.circle")
-                            .font(.title2)
+                    HStack {
+                        Button(action: {
+                            showingFilters.toggle()
+                        }) {
+                            Image(systemName: "line.3.horizontal.decrease.circle")
+                                .font(.title2)
+                        }
+                        
+                        Button(action: {
+                            showingSettings.toggle()
+                        }) {
+                            Image(systemName: "gearshape.fill")
+                                .font(.title2)
+                        }
                     }
                 }
                 
@@ -85,9 +98,14 @@ struct TodoListView: View, TodoViewProtocol {
                     sortOption: $sortOption
                 )
             }
+            .sheet(isPresented: $showingSettings) {
+                SettingsView()
+                    .environmentObject(languageManager)
+            }
             .onAppear {
                 presenter.viewDidLoad()
             }
+            .id(languageManager.currentLanguage.rawValue)
         }
     }
     

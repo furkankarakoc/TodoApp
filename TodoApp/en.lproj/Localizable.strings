@@ -67,3 +67,12 @@
 "section.view" = "View";
 "section.sort" = "Sort";
 
+// Settings
+"settings.title" = "Settings";
+"settings.language" = "Language";
+"settings.appearance" = "Appearance";
+"settings.theme" = "Theme";
+"settings.theme.system" = "System";
+"settings.theme.light" = "Light";
+"settings.theme.dark" = "Dark";
+

@@ -67,3 +67,12 @@
 "section.view" = "Görünüm";
 "section.sort" = "Sıralama";
 
+// Settings
+"settings.title" = "Ayarlar";
+"settings.language" = "Dil";
+"settings.appearance" = "Görünüm";
+"settings.theme" = "Tema";
+"settings.theme.system" = "Sistem";
+"settings.theme.light" = "Açık";
+"settings.theme.dark" = "Koyu";
+

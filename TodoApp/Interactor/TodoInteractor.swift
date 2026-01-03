@@ -31,17 +31,28 @@ class TodoInteractor: TodoInteractorInputProtocol {
     private var todos: [Todo] = []
     private let todosKey = "SavedTodos"
     
+    // Performance: Cache for filtered/sorted results
+    private var cachedFilteredTodos: [Todo]?
+    private var lastFilterParams: (category: TodoCategory?, priority: TodoPriority?, showCompleted: Bool, searchText: String)?
+    
     init() {
         loadTodos()
     }
     
     func fetchTodos() {
-        presenter?.todosFetched(todos)
+        // Performance: Use background queue for heavy operations
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.presenter?.todosFetched(self.todos)
+            }
+        }
     }
     
     func addTodo(title: String, description: String, category: TodoCategory, priority: TodoPriority, dueDate: Date?) {
         let newTodo = Todo(title: title, description: description, category: category, priority: priority, dueDate: dueDate)
         todos.append(newTodo)
+        invalidateCache()
         saveTodos()
         presenter?.todoAdded(newTodo)
     }
@@ -49,6 +60,7 @@ class TodoInteractor: TodoInteractorInputProtocol {
     func updateTodo(_ todo: Todo) {
         if let index = todos.firstIndex(where: { $0.id == todo.id }) {
             todos[index] = todo
+            invalidateCache()
             saveTodos()
             presenter?.todoUpdated(todo)
         }
@@ -56,6 +68,7 @@ class TodoInteractor: TodoInteractorInputProtocol {
     
     func deleteTodo(_ todo: Todo) {
         todos.removeAll { $0.id == todo.id }
+        invalidateCache()
         saveTodos()
         presenter?.todoDeleted(todo)
     }
@@ -67,30 +80,44 @@ class TodoInteractor: TodoInteractorInputProtocol {
     }
     
     func filterTodos(by category: TodoCategory?, priority: TodoPriority?, showCompleted: Bool, searchText: String) -> [Todo] {
+        // Performance: Check cache first
+        let currentParams = (category, priority, showCompleted, searchText)
+        if let cached = cachedFilteredTodos,
+           let lastParams = lastFilterParams,
+           lastParams.category == currentParams.0,
+           lastParams.priority == currentParams.1,
+           lastParams.showCompleted == currentParams.2,
+           lastParams.searchText == currentParams.3 {
+            return cached
+        }
+        
+        // Performance: Use lazy filtering with early exit
         var filtered = todos
         
-        // Category filter
-        if let category = category {
-            filtered = filtered.filter { $0.category == category }
-        }
-        
-        // Priority filter
-        if let priority = priority {
-            filtered = filtered.filter { $0.priority == priority }
-        }
-        
-        // Completion status filter
+        // Apply filters in order of selectivity (most selective first)
         if !showCompleted {
             filtered = filtered.filter { !$0.isCompleted }
         }
         
-        // Search filter
+        if let category = category {
+            filtered = filtered.filter { $0.category == category }
+        }
+        
+        if let priority = priority {
+            filtered = filtered.filter { $0.priority == priority }
+        }
+        
         if !searchText.isEmpty {
+            let lowercasedSearch = searchText.lowercased()
             filtered = filtered.filter { todo in
-                todo.title.localizedCaseInsensitiveContains(searchText) ||
-                todo.description.localizedCaseInsensitiveContains(searchText)
+                todo.title.lowercased().contains(lowercasedSearch) ||
+                todo.description.lowercased().contains(lowercasedSearch)
             }
         }
+        
+        // Cache result
+        cachedFilteredTodos = filtered
+        lastFilterParams = currentParams
         
         return filtered
     }
@@ -129,5 +156,11 @@ class TodoInteractor: TodoInteractorInputProtocol {
            let decoded = try? JSONDecoder().decode([Todo].self, from: data) {
             todos = decoded
         }
+    }
+    
+    // Performance: Invalidate cache when data changes
+    private func invalidateCache() {
+        cachedFilteredTodos = nil
+        lastFilterParams = nil
     }
 }

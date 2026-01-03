@@ -1,0 +1,78 @@
+/* Todo App Localization - French */
+
+// Navigation & Titles
+"app.title" = "Liste de Tâches";
+"todo.new" = "Nouvelle Tâche";
+"todo.edit" = "Modifier la Tâche";
+"filters.title" = "Filtres";
+
+// Buttons
+"button.cancel" = "Annuler";
+"button.save" = "Enregistrer";
+"button.delete" = "Supprimer";
+"button.edit" = "Modifier";
+"button.done" = "Terminé";
+
+// Todo Fields
+"todo.title" = "Titre";
+"todo.description" = "Description";
+"todo.description.optional" = "Description (Optionnel)";
+"todo.completed" = "Terminé";
+"todo.category" = "Catégorie";
+"todo.priority" = "Priorité";
+"todo.dueDate" = "Date d'échéance";
+"todo.dueDate.add" = "Ajouter une date d'échéance";
+
+// Categories
+"category.work" = "Travail";
+"category.personal" = "Personnel";
+"category.shopping" = "Shopping";
+"category.health" = "Santé";
+"category.education" = "Éducation";
+"category.other" = "Autre";
+
+// Priorities
+"priority.high" = "Élevée";
+"priority.medium" = "Moyenne";
+"priority.low" = "Faible";
+
+// Sort Options
+"sort.priority" = "Priorité";
+"sort.dueDate" = "Date";
+"sort.createdAt" = "Créé";
+"sort.title" = "Titre";
+
+// Filters
+"filter.category" = "Filtre de Catégorie";
+"filter.priority" = "Filtre de Priorité";
+"filter.showCompleted" = "Afficher les Terminées";
+"filter.all" = "Tout";
+
+// Empty State
+"empty.title" = "Aucune tâche pour le moment";
+"empty.message" = "Appuyez sur le bouton + pour ajouter une nouvelle tâche";
+
+// Todo Status
+"status.overdue" = "En Retard";
+"status.dueSoon" = "Bientôt";
+
+// Search
+"search.placeholder" = "Rechercher des tâches...";
+
+// Sections
+"section.todoInfo" = "Informations de la Tâche";
+"section.category" = "Catégorie";
+"section.priority" = "Priorité";
+"section.date" = "Date";
+"section.view" = "Vue";
+"section.sort" = "Trier";
+
+// Settings
+"settings.title" = "Paramètres";
+"settings.language" = "Langue";
+"settings.appearance" = "Apparence";
+"settings.theme" = "Thème";
+"settings.theme.system" = "Système";
+"settings.theme.light" = "Clair";
+"settings.theme.dark" = "Sombre";
+
