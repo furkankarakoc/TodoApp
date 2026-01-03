@@ -11,6 +11,12 @@ struct TodoListView: View, TodoViewProtocol {
     @StateObject private var presenter: TodoPresenter
     @State private var showingAddTodo = false
     @State private var selectedTodo: Todo?
+    @State private var selectedCategory: TodoCategory? = nil
+    @State private var selectedPriority: TodoPriority? = nil
+    @State private var showCompleted: Bool = true
+    @State private var searchText: String = ""
+    @State private var sortOption: TodoSortOption = .priority
+    @State private var showingFilters: Bool = false
     
     init() {
         let presenter = TodoPresenter()
@@ -25,17 +31,37 @@ struct TodoListView: View, TodoViewProtocol {
         _presenter = StateObject(wrappedValue: presenter)
     }
     
+    var filteredAndSortedTodos: [Todo] {
+        presenter.getFilteredAndSortedTodos(
+            category: selectedCategory,
+            priority: selectedPriority,
+            showCompleted: showCompleted,
+            searchText: searchText,
+            sortOption: sortOption
+        )
+    }
+    
     var body: some View {
         NavigationView {
             ZStack {
-                if presenter.todos.isEmpty {
+                if filteredAndSortedTodos.isEmpty {
                     emptyStateView
                 } else {
                     todoList
                 }
             }
-            .navigationTitle("Todo List")
+            .navigationTitle("app.title".localized)
+            .searchable(text: $searchText, prompt: "search.placeholder".localized)
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        showingFilters.toggle()
+                    }) {
+                        Image(systemName: "line.3.horizontal.decrease.circle")
+                            .font(.title2)
+                    }
+                }
+                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         showingAddTodo = true
@@ -51,6 +77,14 @@ struct TodoListView: View, TodoViewProtocol {
             .sheet(item: $selectedTodo) { todo in
                 EditTodoView(presenter: presenter, todo: todo)
             }
+            .sheet(isPresented: $showingFilters) {
+                FilterView(
+                    selectedCategory: $selectedCategory,
+                    selectedPriority: $selectedPriority,
+                    showCompleted: $showCompleted,
+                    sortOption: $sortOption
+                )
+            }
             .onAppear {
                 presenter.viewDidLoad()
             }
@@ -62,10 +96,10 @@ struct TodoListView: View, TodoViewProtocol {
             Image(systemName: "checklist")
                 .font(.system(size: 60))
                 .foregroundColor(.gray)
-            Text("Henüz todo yok")
+            Text("empty.title".localized)
                 .font(.title2)
                 .foregroundColor(.gray)
-            Text("Yeni bir todo eklemek için + butonuna tıklayın")
+            Text("empty.message".localized)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
@@ -75,19 +109,19 @@ struct TodoListView: View, TodoViewProtocol {
     
     private var todoList: some View {
         List {
-            ForEach(presenter.todos) { todo in
+            ForEach(filteredAndSortedTodos) { todo in
                 TodoRowView(todo: todo, presenter: presenter)
                     .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                         Button(role: .destructive) {
                             presenter.deleteTodo(todo)
                         } label: {
-                            Label("Sil", systemImage: "trash")
+                            Label("button.delete".localized, systemImage: "trash")
                         }
                         
                         Button {
                             selectedTodo = todo
                         } label: {
-                            Label("Düzenle", systemImage: "pencil")
+                            Label("button.edit".localized, systemImage: "pencil")
                         }
                         .tint(.blue)
                     }
@@ -97,7 +131,7 @@ struct TodoListView: View, TodoViewProtocol {
     }
     
     func updateTodos(_ todos: [Todo]) {
-        // SwiftUI will automatically update when @StateObject changes
+        // Auto-update via @StateObject
     }
 }
 
@@ -116,7 +150,34 @@ struct TodoRowView: View {
             }
             .buttonStyle(PlainButtonStyle())
             
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(spacing: 8) {
+                    // Category icon
+                    Image(systemName: todo.category.icon)
+                        .foregroundColor(todo.category.color)
+                        .font(.caption)
+                    
+                    // Priority icon
+                    Image(systemName: todo.priority.icon)
+                        .foregroundColor(todo.priority.color)
+                        .font(.caption)
+                    
+                    Spacer()
+                    
+                    // Due date warning
+                    if todo.dueDate != nil {
+                        if todo.isOverdue {
+                            Label("status.overdue".localized, systemImage: "exclamationmark.triangle.fill")
+                                .font(.caption2)
+                                .foregroundColor(.red)
+                        } else if todo.isDueSoon {
+                            Label("status.dueSoon".localized, systemImage: "clock.fill")
+                                .font(.caption2)
+                                .foregroundColor(.orange)
+                        }
+                    }
+                }
+                
                 Text(todo.title)
                     .font(.headline)
                     .strikethrough(todo.isCompleted)
@@ -128,11 +189,97 @@ struct TodoRowView: View {
                         .foregroundColor(.secondary)
                         .lineLimit(2)
                 }
+                
+                if let dueDate = todo.dueDate {
+                    HStack {
+                        Image(systemName: "calendar")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                        Text(dueDate, style: .date)
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                        Text("•")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                        Text(dueDate, style: .time)
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
+                }
             }
             
             Spacer()
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 6)
+        .opacity(todo.isCompleted ? 0.6 : 1.0)
     }
 }
 
+struct FilterView: View {
+    @Environment(\.dismiss) var dismiss
+    @Binding var selectedCategory: TodoCategory?
+    @Binding var selectedPriority: TodoPriority?
+    @Binding var showCompleted: Bool
+    @Binding var sortOption: TodoSortOption
+    
+    var body: some View {
+        NavigationView {
+            Form {
+                Section(header: Text("filter.category".localized)) {
+                    Picker("todo.category".localized, selection: Binding(
+                        get: { selectedCategory ?? .other },
+                        set: { selectedCategory = $0 == .other ? nil : $0 }
+                    )) {
+                        Text("filter.all".localized).tag(TodoCategory.other)
+                        ForEach(TodoCategory.allCases) { category in
+                            HStack {
+                                Image(systemName: category.icon)
+                                    .foregroundColor(category.color)
+                                Text(category.localizedName)
+                            }
+                            .tag(category)
+                        }
+                    }
+                }
+                
+                Section(header: Text("filter.priority".localized)) {
+                    Picker("todo.priority".localized, selection: Binding(
+                        get: { selectedPriority ?? .medium },
+                        set: { selectedPriority = $0 == .medium ? nil : $0 }
+                    )) {
+                        Text("filter.all".localized).tag(TodoPriority.medium)
+                        ForEach(TodoPriority.allCases) { priority in
+                            HStack {
+                                Image(systemName: priority.icon)
+                                    .foregroundColor(priority.color)
+                                Text(priority.localizedName)
+                            }
+                            .tag(priority)
+                        }
+                    }
+                }
+                
+                Section(header: Text("section.view".localized)) {
+                    Toggle("filter.showCompleted".localized, isOn: $showCompleted)
+                }
+                
+                Section(header: Text("section.sort".localized)) {
+                    Picker("section.sort".localized, selection: $sortOption) {
+                        ForEach(TodoSortOption.allCases) { option in
+                            Text(option.localizedName).tag(option)
+                        }
+                    }
+                }
+            }
+            .navigationTitle("filters.title".localized)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("button.done".localized) {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+}

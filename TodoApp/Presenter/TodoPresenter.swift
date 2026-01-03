@@ -15,12 +15,13 @@ protocol TodoPresenterProtocol: AnyObject {
     var interactor: TodoInteractorInputProtocol? { get set }
     
     func viewDidLoad()
-    func addTodo(title: String, description: String)
+    func addTodo(title: String, description: String, category: TodoCategory, priority: TodoPriority, dueDate: Date?)
     func updateTodo(_ todo: Todo)
     func deleteTodo(_ todo: Todo)
     func toggleTodoCompletion(_ todo: Todo)
     func showAddTodoView()
     func showEditTodoView(_ todo: Todo)
+    func getFilteredAndSortedTodos(category: TodoCategory?, priority: TodoPriority?, showCompleted: Bool, searchText: String, sortOption: TodoSortOption) -> [Todo]
 }
 
 class TodoPresenter: ObservableObject, TodoPresenterProtocol, TodoInteractorOutputProtocol {
@@ -33,11 +34,17 @@ class TodoPresenter: ObservableObject, TodoPresenterProtocol, TodoInteractorOutp
         interactor?.fetchTodos()
     }
     
-    func addTodo(title: String, description: String) {
+    func addTodo(title: String, description: String, category: TodoCategory, priority: TodoPriority, dueDate: Date?) {
         guard !title.trimmingCharacters(in: .whitespaces).isEmpty else {
             return
         }
-        interactor?.addTodo(title: title, description: description)
+        interactor?.addTodo(title: title, description: description, category: category, priority: priority, dueDate: dueDate)
+    }
+    
+    func getFilteredAndSortedTodos(category: TodoCategory?, priority: TodoPriority?, showCompleted: Bool, searchText: String, sortOption: TodoSortOption) -> [Todo] {
+        guard let interactor = interactor else { return todos }
+        let filtered = interactor.filterTodos(by: category, priority: priority, showCompleted: showCompleted, searchText: searchText)
+        return interactor.sortTodos(filtered, by: sortOption)
     }
     
     func updateTodo(_ todo: Todo) {
@@ -81,7 +88,7 @@ class TodoPresenter: ObservableObject, TodoPresenterProtocol, TodoInteractorOutp
     }
     
     func errorOccurred(_ error: Error) {
-        // Handle error - could show alert to user
+        // Log error (could show alert to user)
         print("Error: \(error.localizedDescription)")
     }
 }

@@ -1,0 +1,69 @@
+/* Todo App Localization - Turkish */
+
+// Navigation & Titles
+"app.title" = "Todo Listesi";
+"todo.new" = "Yeni Todo";
+"todo.edit" = "Todo Düzenle";
+"filters.title" = "Filtreler";
+
+// Buttons
+"button.cancel" = "İptal";
+"button.save" = "Kaydet";
+"button.delete" = "Sil";
+"button.edit" = "Düzenle";
+"button.done" = "Tamam";
+
+// Todo Fields
+"todo.title" = "Başlık";
+"todo.description" = "Açıklama";
+"todo.description.optional" = "Açıklama (Opsiyonel)";
+"todo.completed" = "Tamamlandı";
+"todo.category" = "Kategori";
+"todo.priority" = "Öncelik";
+"todo.dueDate" = "Son Tarih";
+"todo.dueDate.add" = "Son Tarih Ekle";
+
+// Categories
+"category.work" = "İş";
+"category.personal" = "Kişisel";
+"category.shopping" = "Alışveriş";
+"category.health" = "Sağlık";
+"category.education" = "Eğitim";
+"category.other" = "Diğer";
+
+// Priorities
+"priority.high" = "Yüksek";
+"priority.medium" = "Orta";
+"priority.low" = "Düşük";
+
+// Sort Options
+"sort.priority" = "Öncelik";
+"sort.dueDate" = "Tarih";
+"sort.createdAt" = "Oluşturulma";
+"sort.title" = "Başlık";
+
+// Filters
+"filter.category" = "Kategori Filtresi";
+"filter.priority" = "Öncelik Filtresi";
+"filter.showCompleted" = "Tamamlananları Göster";
+"filter.all" = "Tümü";
+
+// Empty State
+"empty.title" = "Henüz todo yok";
+"empty.message" = "Yeni bir todo eklemek için + butonuna tıklayın";
+
+// Todo Status
+"status.overdue" = "Süresi Doldu";
+"status.dueSoon" = "Yakında";
+
+// Search
+"search.placeholder" = "Todo ara...";
+
+// Sections
+"section.todoInfo" = "Todo Bilgileri";
+"section.category" = "Kategori";
+"section.priority" = "Öncelik";
+"section.date" = "Tarih";
+"section.view" = "Görünüm";
+"section.sort" = "Sıralama";
+

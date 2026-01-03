@@ -1,0 +1,69 @@
+/* Todo App Localization - English */
+
+// Navigation & Titles
+"app.title" = "Todo List";
+"todo.new" = "New Todo";
+"todo.edit" = "Edit Todo";
+"filters.title" = "Filters";
+
+// Buttons
+"button.cancel" = "Cancel";
+"button.save" = "Save";
+"button.delete" = "Delete";
+"button.edit" = "Edit";
+"button.done" = "Done";
+
+// Todo Fields
+"todo.title" = "Title";
+"todo.description" = "Description";
+"todo.description.optional" = "Description (Optional)";
+"todo.completed" = "Completed";
+"todo.category" = "Category";
+"todo.priority" = "Priority";
+"todo.dueDate" = "Due Date";
+"todo.dueDate.add" = "Add Due Date";
+
+// Categories
+"category.work" = "Work";
+"category.personal" = "Personal";
+"category.shopping" = "Shopping";
+"category.health" = "Health";
+"category.education" = "Education";
+"category.other" = "Other";
+
+// Priorities
+"priority.high" = "High";
+"priority.medium" = "Medium";
+"priority.low" = "Low";
+
+// Sort Options
+"sort.priority" = "Priority";
+"sort.dueDate" = "Date";
+"sort.createdAt" = "Created";
+"sort.title" = "Title";
+
+// Filters
+"filter.category" = "Category Filter";
+"filter.priority" = "Priority Filter";
+"filter.showCompleted" = "Show Completed";
+"filter.all" = "All";
+
+// Empty State
+"empty.title" = "No todos yet";
+"empty.message" = "Tap the + button to add a new todo";
+
+// Todo Status
+"status.overdue" = "Overdue";
+"status.dueSoon" = "Due Soon";
+
+// Search
+"search.placeholder" = "Search todos...";
+
+// Sections
+"section.todoInfo" = "Todo Information";
+"section.category" = "Category";
+"section.priority" = "Priority";
+"section.date" = "Date";
+"section.view" = "View";
+"section.sort" = "Sort";
+
